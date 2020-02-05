@@ -22,7 +22,9 @@ Tensorflow 2.1.0rc2 https://pypi.tuna.tsinghua.edu.cn/simple/tensorflow/
 我都搞清楚我现在system用的是哪个版本了为啥还要去搞个新版本嘞。就用原来的3.6.1不就好了。估计是我17年装的
 但是3.6.1里装的tf是1.13.1。还是先放放吧
 
-
+```
+tensorflow_datasets 2.0.0 (被旧版本教程坑了，subsplit在新版本报错。)
+```
 
 发布候选版 (RC=Release Candidate)  
 最终版 (RTM=Release To Manufacture)
