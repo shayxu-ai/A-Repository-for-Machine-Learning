@@ -8,7 +8,7 @@
 """
     第一个最好是看一眼就能全部想起来那种
     https://tensorflow.google.cn/api_docs/python/tf
-
+    np.load npz
     其实也没几个模块
 """
 

@@ -16,8 +16,8 @@ from tensorflow.keras import Model
 from tensorflow import keras
 
 
-import tensorflow_hub as hub
-import tensorflow_datasets as tfds  # https://tensorflow.google.cn/datasets/api_docs/python/tfds?hl=en
+import tensorflow_hub as hub    # 模型库
+import tensorflow_datasets as tfds  # 数据|库 https://tensorflow.google.cn/datasets/api_docs/python/tfds?hl=en
 tfds.disable_progress_bar()
 
 def version():
