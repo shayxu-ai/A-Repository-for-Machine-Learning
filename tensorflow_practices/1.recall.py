@@ -6,10 +6,19 @@
 
 
 """
-    第一个最好是看一眼就能全部想起来那种
-    https://tensorflow.google.cn/api_docs/python/tf
-    np.load npz
-    其实也没几个模块
+    https://tensorflow.google.cn/api_docs/python/tf     api文档
+
+    1、将数据以numpy.ndarray格式导入python
+    2、用keras.Sequential构建序贯的模型。（不同的任务，设置不同的模型）
+    3、设置优化函数，损失函数。
+    4、设置batch size和epoch并训练
+    5、save and load模型
+
+    可能有的问题
+    1、过拟合与欠拟合
+
+
+    .npz文件用np.load读
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals      # 导入一些熟悉的陌生人
