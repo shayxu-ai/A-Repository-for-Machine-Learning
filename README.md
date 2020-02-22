@@ -30,3 +30,8 @@ tensorflow_datasets 2.0.0 (被旧版本教程坑了，subsplit在新版本报错
 发布候选版 (RC=Release Candidate)  
 最终版 (RTM=Release To Manufacture)
 
+https://www.bilibili.com/video/av59503393
+听了个很有意思的公开课。
+比起学理论，更重要的是增加自己的能力。
+会用什么工具，能起到什么作用，可以给你的manager提供什么帮助。
+
