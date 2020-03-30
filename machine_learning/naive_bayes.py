@@ -9,6 +9,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer  # 从sklearn.feature_extraction.text里导入文本特征向量化模块
 from sklearn.naive_bayes import MultinomialNB  # 从sklean.naive_bayes里导入朴素贝叶斯模型
+# from sklearn.naive_bayes import GaussianNB
+# from sklearn.naive_bayes import BernoulliNB
 from sklearn.metrics import classification_report
 
 X = np.array([
