@@ -47,7 +47,7 @@ for sen in sentences:
     target_batch.append(np.eye(n_class)[target])
 
 # Model
-X = tf.placeholder(tf.float32, [None, n_step, n_class]) # [batch_size, number of steps, number of Vocabulary]
+X = tf.placeholder(tf.float32, [None, n_step, n_class])  # [batch_size, number of steps, number of Vocabulary]
 Y = tf.placeholder(tf.float32, [None, n_class])
 
 input = tf.reshape(X, shape=[-1, n_step * n_class]) # [batch_size, n_step * n_class]
