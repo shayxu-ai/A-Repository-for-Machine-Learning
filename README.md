@@ -35,6 +35,17 @@ https://www.bilibili.com/video/av59503393
 比起学理论，更重要的是增加自己的能力。
 会用什么工具，能起到什么作用，可以给你的manager提供什么帮助。
 
+LR SVM DT BOOST K-MEANS CRF-BiLSTM
+CNN RNN LSTM Attention transform gpt bert
+one-hot bow w2v fasttest glove elmo
+分词 词性标注 命名实体识别 依存句法分析
+
+LR，贝叶斯分类，单层感知机、线性回归，SVM（线性核）
+决策树、RF、GBDT、多层感知机、SVM（高斯核）等。
+
+GradientTree Boosting
+GBDT泛指所有梯度提升树算法，包括XGBoost，它也是GBDT的一种变种，为了区分它们，GBDT一般特指“Greedy Function Approximation：A Gradient Boosting Machine”里提出的算法，只用了一阶导数信息。
+
 
 
 
