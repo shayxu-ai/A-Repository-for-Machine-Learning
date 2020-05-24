@@ -101,13 +101,13 @@ def main():
                                                                             labels,
                                                                             test_data_proportion=0.3)
 
-    from model.nlp.tfidf_allinone.normalization import normalize_corpus
+    from nlp.tfidf_allinone.normalization import normalize_corpus
 
     # 进行归一化
     norm_train_corpus = normalize_corpus(train_corpus)
     norm_test_corpus = normalize_corpus(test_corpus)
 
-    from model.nlp.tfidf_allinone.feature_extractors import bow_extractor, tfidf_extractor
+    from nlp.tfidf_allinone import bow_extractor, tfidf_extractor
     import gensim
     import jieba
 
