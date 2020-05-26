@@ -14,29 +14,30 @@ def get_stopword_list():
     # 停用词表存储路径，每一行为一个词，按行读取进行加载
     # 进行编码转换确保匹配准确率
     stop_word_path = './stopword.txt'
-    stopword_list = [sw.replace('\n', '') for sw in open(stop_word_path, encoding='utf-8').readlines()]
+    stopword_list = [sw.replace('\n', '') for sw in open(stop_word_path, encoding='utf-8-sig').readlines()]
+    # print(stopword_list)
     return stopword_list
 
 
 # 分词方法，调用结巴接口
-def seg_to_list(sentence, pos=False):
-    if not pos:
+def seg_to_list(sentence, pos_flag=False):
+    if not pos_flag:
         # 不进行词性标注的分词方法
-        seg_list = jieba.cut(sentence)
+        seg_list_tmp = jieba.cut(sentence)
     else:
         # 进行词性标注的分词方法
-        seg_list = psg.cut(sentence)
-    return seg_list
+        seg_list_tmp = psg.cut(sentence)
+    return seg_list_tmp
 
 
 # 去除干扰词
-def word_filter(seg_list, pos=False):
+def word_filter(seg_list, pos_flag=False):
     stopword_list = get_stopword_list()
-    filter_list = []
+    filtered_list_tmp = []
     # 根据POS参数选择是否词性过滤
-    ## 不进行词性过滤，则将词性都标记为n，表示全部保留
+    # 不进行词性过滤，则将词性都标记为n，表示全部保留
     for seg in seg_list:
-        if not pos:
+        if not pos_flag:
             word = seg
             flag = 'n'
         else:
@@ -45,20 +46,20 @@ def word_filter(seg_list, pos=False):
         if not flag.startswith('n'):
             continue
         # 过滤停用词表中的词，以及长度为<2的词
-        if not word in stopword_list and len(word) > 1:
-            filter_list.append(word)
+        if word not in stopword_list and len(word) > 1:
+            filtered_list_tmp.append(word)
 
-    return filter_list
+    return filtered_list_tmp
 
 
 # 数据加载，pos为是否词性标注的参数，corpus_path为数据集路径
-def load_data(pos=False, corpus_path='./corpus.txt'):
+def load_data(pos_tmp=False, corpus_path='./corpus.txt'):
     # 调用上面方式对数据集进行处理，处理后的每条数据仅保留非干扰词
     doc_list = []
-    for line in open(corpus_path, 'r',encoding='utf-8'):
+    for line in open(corpus_path, 'r', encoding='utf-8'):
         content = line.strip()
-        seg_list = seg_to_list(content, pos)
-        filter_list = word_filter(seg_list, pos)
+        seg_list = seg_to_list(content, pos_tmp)
+        filter_list = word_filter(seg_list, pos_tmp)
         doc_list.append(filter_list)
 
     return doc_list
@@ -79,7 +80,7 @@ def train_idf(doc_list):
     for k, v in idf_dic.items():
         idf_dic[k] = math.log(tt_count / (1.0 + v))
 
-    # 对于没有在字典中的词，默认其仅在一个文档出现，得到默认idf值
+    # 对于没有在字典中的词，默认其仅在一个文档出现，得到默认idf值。 这明明是没出现吧
     default_idf = math.log(tt_count / 1.0)
     return idf_dic, default_idf
 
@@ -261,15 +262,16 @@ if __name__ == '__main__':
            '事长接受晋江市参与“百万孤老关爱行动”向国家重点扶贫地区捐赠的价值400万元的款物。晋江市人大' + \
            '常委会主任陈健倩介绍了大会的筹备情况。'
 
-    pos = True
-    seg_list = seg_to_list(text, pos)
-    filter_list = word_filter(seg_list, pos)
+    # 对待提取关键字的文章 1、进行分词 2、去除停用词
+    pos = True      # 词性过滤
+    seg_list = seg_to_list(text, pos)   # 分词
+    filtered_list = word_filter(seg_list, pos)      # 列表
 
     print('TF-IDF模型结果：')
-    tfidf_extract(filter_list)
+    tfidf_extract(filtered_list)
     print('TextRank模型结果：')
     textrank_extract(text)
     print('LSI模型结果：')
-    topic_extract(filter_list, 'LSI', pos)
+    topic_extract(filtered_list, 'LSI', pos)
     print('LDA模型结果：')
-    topic_extract(filter_list, 'LDA', pos)
+    topic_extract(filtered_list, 'LDA', pos)
