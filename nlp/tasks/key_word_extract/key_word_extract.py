@@ -7,6 +7,7 @@ import jieba.posseg as psg
 from gensim import corpora, models
 from jieba import analyse
 import functools
+import re
 
 
 # 停用词表加载方法
@@ -15,6 +16,9 @@ def get_stopword_list():
     # 进行编码转换确保匹配准确率
     stop_word_path = './stopword.txt'
     stopword_list = [sw.replace('\n', '') for sw in open(stop_word_path, encoding='utf-8-sig').readlines()]
+    stop_word_path = './stopword_custom.txt'
+    stopword_custom_list = [sw.replace('\n', '') for sw in open(stop_word_path, encoding='utf-8-sig').readlines()]
+    stopword_list.extend(stopword_custom_list)
     # print(stopword_list)
     return stopword_list
 
@@ -27,6 +31,7 @@ def seg_to_list(sentence, pos_flag=False):
     else:
         # 进行词性标注的分词方法
         seg_list_tmp = psg.cut(sentence)
+
     return seg_list_tmp
 
 
@@ -43,7 +48,7 @@ def word_filter(seg_list, pos_flag=False):
         else:
             word = seg.word
             flag = seg.flag
-        if not flag.startswith('n'):
+        if not (flag.startswith('n') or flag.startswith('v')):
             continue
         # 过滤停用词表中的词，以及长度为<2的词
         if word not in stopword_list and len(word) > 1:
@@ -53,7 +58,7 @@ def word_filter(seg_list, pos_flag=False):
 
 
 # 数据加载，pos为是否词性标注的参数，corpus_path为数据集路径
-def load_data(pos_tmp=False, corpus_path='./corpus.txt'):
+def load_data(pos_tmp=False, corpus_path='./complaints.txt'):
     # 调用上面方式对数据集进行处理，处理后的每条数据仅保留非干扰词
     doc_list = []
     for line in open(corpus_path, 'r', encoding='utf-8'):
@@ -164,6 +169,9 @@ class TopicModel(object):
         # 得到数据集的主题-词分布
         word_dic = self.word_dictionary(doc_list)
         self.wordtopic_dic = self.get_wordtopic(word_dic)
+        # print(self.wordtopic_dic)
+        # print(self.model.show_topics())
+        # [(0, '0.002*"孩子" + 0.002*"运动鞋" + 0.002*"孤儿" + 0.002*"搜
 
     def train_lsi(self):
         lsi = models.LsiModel(self.corpus_tfidf, id2word=self.dictionary, num_topics=self.num_topics)
@@ -187,7 +195,8 @@ class TopicModel(object):
     def get_simword(self, word_list):
         sentcorpus = self.tfidf_model[self.dictionary.doc2bow(word_list)]
         senttopic = self.model[sentcorpus]
-
+        # print(senttopic)
+        # [(0, 0.0353493), (1, 0.03489105), (2, 0.034628212), (3, 0.89513147)]
         # 余弦相似度计算
         def calsim(l1, l2):
             a, b, c = 0.0, 0.0, 0.0
@@ -236,10 +245,11 @@ def tfidf_extract(word_list, pos=False, keyword_num=10):
 
 def textrank_extract(text, pos=False, keyword_num=10):
     textrank = analyse.textrank
-    keywords = textrank(text, keyword_num)
+    keywords = textrank(text, keyword_num, withWeight=True)
     # 输出抽取出的关键词
     for keyword in keywords:
-        print(keyword + "/ ", end='')
+        print(keyword[0], end="")
+        print(str(keyword[1]))
     print()
 
 
@@ -250,27 +260,26 @@ def topic_extract(word_list, model, pos=False, keyword_num=10):
 
 
 if __name__ == '__main__':
-    text = '6月19日,《2012年度“中国爱心城市”公益活动新闻发布会》在京举行。' + \
-           '中华社会救助基金会理事长许嘉璐到会讲话。基金会高级顾问朱发忠,全国老龄' + \
-           '办副主任朱勇,民政部社会救助司助理巡视员周萍,中华社会救助基金会副理事长耿志远,' + \
-           '重庆市民政局巡视员谭明政。晋江市人大常委会主任陈健倩,以及10余个省、市、自治区民政局' + \
-           '领导及四十多家媒体参加了发布会。中华社会救助基金会秘书长时正新介绍本年度“中国爱心城' + \
-           '市”公益活动将以“爱心城市宣传、孤老关爱救助项目及第二届中国爱心城市大会”为主要内容,重庆市' + \
-           '、呼和浩特市、长沙市、太原市、蚌埠市、南昌市、汕头市、沧州市、晋江市及遵化市将会积极参加' + \
-           '这一公益活动。中国雅虎副总编张银生和凤凰网城市频道总监赵耀分别以各自媒体优势介绍了活动' + \
-           '的宣传方案。会上,中华社会救助基金会与“第二届中国爱心城市大会”承办方晋江市签约,许嘉璐理' + \
-           '事长接受晋江市参与“百万孤老关爱行动”向国家重点扶贫地区捐赠的价值400万元的款物。晋江市人大' + \
-           '常委会主任陈健倩介绍了大会的筹备情况。'
+    text = '我方在核心TXP上ping测198.13.42.222丢包严重，请集团协查。21:50联系客户，告知最新查证结果是上海移动出口访问国外VPN服务器IP地址丢包严重，解决方案和时间是将此问题上报集团优化网络，预计一周时间内解决，客户认可，并希望尽快收到VPN网络能否正常使用的明确答复'
+
+    jieba.load_userdict('./user_dict.utf8')
 
     # 对待提取关键字的文章 1、进行分词 2、去除停用词
     pos = True      # 词性过滤
+
     seg_list = seg_to_list(text, pos)   # 分词
+    # 生成器生成了就没了
+    # print(list(seg_list))
     filtered_list = word_filter(seg_list, pos)      # 列表
+    # print(filtered_list)
 
     print('TF-IDF模型结果：')
     tfidf_extract(filtered_list)
+
+    # # 长文本其实好用的，反复提及的词权重高。
     print('TextRank模型结果：')
     textrank_extract(text)
+
     print('LSI模型结果：')
     topic_extract(filtered_list, 'LSI', pos)
     print('LDA模型结果：')
