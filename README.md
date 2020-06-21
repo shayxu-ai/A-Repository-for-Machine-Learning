@@ -3,7 +3,14 @@
 在github上clone了一大堆项目，没有一个变成自己的东西。所以还是自己整理一下。
 
 markdown教程 https://www.runoob.com/markdown/md-code.html
+
 ```
+安装四连 
+pip install pip -U -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install tensorflow -U -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install tensorflow-addons -U -i https://pypi.tuna.tsinghua.edu.cn/simple 
+pip install tensorflow_datasets -U -i https://pypi.tuna.tsinghua.edu.cn/simple
+
 Python 3.7.5
 Tensorflow-cpu 2.1.0rc2    (虽然安装包大小和原版一样，单既然有就装CPU版吧，区别未知。GPU版没有分MACOS。p.s. Github上能找到支持AVX的版本)
 pytorch 它不香吗
@@ -53,4 +60,6 @@ GBDT泛指所有梯度提升树算法，包括XGBoost，它也是GBDT的一种�
 
 https://www.paddlepaddle.org.cn/ 飞浆开源平台
 
+It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.
+sudo pip install pyasn1 --upgrade --ignore-installed six  
 

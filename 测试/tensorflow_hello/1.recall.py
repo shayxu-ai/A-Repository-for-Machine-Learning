@@ -192,8 +192,8 @@ def mnist_recognize_advanced():
 
 
 if __name__ == '__main__':
-    # version()
-    mnist_recognize_advanced()
+    version()
+    # mnist_recognize_advanced()
 
 
 

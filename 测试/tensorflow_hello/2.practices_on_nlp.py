@@ -20,6 +20,7 @@ import tensorflow_hub as hub    # 模型库
 import tensorflow_datasets as tfds  # 数据|库 https://tensorflow.google.cn/datasets/api_docs/python/tfds?hl=en
 tfds.disable_progress_bar()
 
+
 def version():
     """
     国际惯例，先看下版本
