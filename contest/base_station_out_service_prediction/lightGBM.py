@@ -2,7 +2,7 @@
 # @Time: 2020/6/30,030 13:36
 # @Last Update: 2020/6/30,030 13:36
 # @Author: 徐缘
-# @FileName: chaoxi2.py
+# @FileName: lightGBM.py
 # @Software: PyCharm
 
 
@@ -65,7 +65,7 @@ def gener_train_data(all_data, times):
         tmp_data = tmp_data.merge(label_data, on='基站名称', how='left')
 
         tmp_data['ID'] = tmp_data['基站名称'] + '_' + str(i)
-        tmp_data['end_time'] = tmp_data['end_time'] - datetime.timedelta(days=i)
+        tmp_data['end_time'] = tmp_data['end_time'] - datetime.timedelta(days=i)    # 你这个是str -
 
         res_data = res_data.append(tmp_data)
     return res_data
@@ -351,7 +351,7 @@ if __name__ == '__main__':
         all_train_data = get_all_train_data(train_path)
         all_train_data.to_csv(save_path, index=False)
     all_train_data = pd.read_csv('all_train_data.csv')
-    offline_train_data = get_train_data(all_train_data, times=30)  # 后面没用到过？
+    # offline_train_data = get_train_data(all_train_data, times=30)  # 后面没用到过？
     online_train_data = get_train_data(all_train_data, times=30)
     all_data = online_train_data.append(all_test_data)  # 把测试集加入训练集
 
