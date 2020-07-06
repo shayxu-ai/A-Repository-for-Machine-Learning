@@ -44,14 +44,17 @@ def get_all_train_data(train_path):
 # 生成训练集
 def gener_train_data(all_data, times):
     """
-    start_i: 从第几天开始抽取
+    i: 从第几天开始抽取
     times： 抽取多少次
+
     """
     print('*********')
+
     res_data = pd.DataFrame()
     all_data['end_time'] = pd.to_datetime(all_data['end_time'], format='%Y-%m-%d %H:%M:%S')
     for i in tqdm(range(times)):
         label_data = all_data[all_data['time_gap'] == i]
+
         # 生成label
         label_data['label'] = label_data['告警名称'].apply(
             lambda x: 1 if x.strip() == '网元连接中断' or x.strip() == '小区不可用告警' else 0)
@@ -59,15 +62,18 @@ def gener_train_data(all_data, times):
         label_data['label'] = label_data['label'].apply(lambda x: 1 if x > 0 else 0)
 
         # 取前7天的训练数据
-        tmp_data = all_data[(all_data['time_gap'] > i) & (all_data['time_gap'] <= i + 7)]
+        tmp_data = all_data[(all_data['time_gap'] > i) & (all_data['time_gap'] <= i + 7) &
+                            (all_data['基站名称'].isin(label_data['基站名称']))]   # 深拷贝 筛选
         # 处理时间 保持同一个窗口内，大小为7
         tmp_data['time_gap'] = tmp_data['time_gap'] - i
+
         tmp_data = tmp_data.merge(label_data, on='基站名称', how='left')
 
         tmp_data['ID'] = tmp_data['基站名称'] + '_' + str(i)
         tmp_data['end_time'] = tmp_data['end_time'] - datetime.timedelta(days=i)    # 你这个是str -
 
         res_data = res_data.append(tmp_data)
+
     return res_data
 
 
@@ -319,9 +325,9 @@ if __name__ == '__main__':
     # 0324-0330
     test_0330_path = '/mnt/5/Alert_BTS_HW_0324-0330'
 
-    train_path = 'data'
-    test_0322_path = 'data'
-    test_0330_path = 'data'
+    train_path = '../data/train'
+    test_0322_path = '../data/test'
+    test_0330_path = '../data/test'
 
     # 处理测试数据集
     all_test_data = pd.DataFrame()
@@ -346,14 +352,14 @@ if __name__ == '__main__':
     all_test_data['time_gap'] += 1
     # print(all_test_data['time_gap'])
 
-    save_path = './all_train_data.csv'
+    save_path = '../all_train_data.csv'
     if not os.path.exists(save_path):
         all_train_data = get_all_train_data(train_path)
         all_train_data.to_csv(save_path, index=False)
-    all_train_data = pd.read_csv('all_train_data.csv')
-    # offline_train_data = get_train_data(all_train_data, times=30)  # 后面没用到过？
-    online_train_data = get_train_data(all_train_data, times=30)
-    all_data = online_train_data.append(all_test_data)  # 把测试集加入训练集
+    all_train_data = pd.read_csv('../all_train_data.csv')
+
+    online_train_data = get_train_data(all_train_data, times=30)    # 添加label
+    all_data = online_train_data.append(all_test_data)   # 把测试集加入训练集
 
     # 生成特征
     all_data_fea = gener_fea(all_data)
