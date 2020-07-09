@@ -10,3 +10,4 @@ df['c'] = pd.to_datetime(df['c'], format='%Y-%m-%d %H:%M:%S')  # not in-place
 print(df['c'])
 print((df['c'][1] - datetime.datetime.now()) >= np.timedelta64(1, 'D') * 0.5)
 
+df.drop()

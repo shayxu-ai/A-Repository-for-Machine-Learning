@@ -8,18 +8,12 @@
 
 import csv
 import datetime
-
-
-def read_data():
-    with open("data/AlertHW_DF_1.csv", encoding="utf") as f:
-        reader = csv.reader(f, header=1)
-        for line in reader:
-            print(line)
-
-    return
+import pandas as pd
 
 
 if __name__ == '__main__':
+    # 1:10 还是 1:3
+    train = pd.read_csv("train_data.csv")
+    print(train["label"].sum())
 
-    inp = read_data()
 
