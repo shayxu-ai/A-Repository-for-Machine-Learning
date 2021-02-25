@@ -25,7 +25,7 @@ https://www.python.org/ftp/python/3.7.8/Python-3.7.8.tar.xz
 (推荐)http://mirrors.sohu.com/python/3.7.8/Python-3.7.8.tar.xz  浏览器点不进python的目录，但是可以下载
 http://mirrors.sohu.com/python/3.7.8/python-3.7.8-amd64.exe
 
-Tensorflow最新只支持到CP37  
+Tensorflow最新只支持到CP38(Jan 22)
 Python 3.7.6 - Dec. 18, 2019    https://www.python.org/downloads/mac-osx/
 Python 3.7.6                    https://github.com/pyenv/pyenv#homebrew-on-macos
 Tensorflow 2.1.0 Jan 9, 2020 https://pypi.org/project/tensorflow/#files
